@@ -73,7 +73,6 @@ class Lift {
                         let temp = house.floors[this.currentFloor].people.pop();
                         house.floors[this.currentFloor].numberOfPeople--;
                         this.pressedButtons.push(temp.targetFloor);
-                        console.log(temp.targetFloor);
                         this.currPpl++;
                         availableSpace--;
                         if (house.floors[this.currentFloor].people.length === 0) {
@@ -105,17 +104,21 @@ class Lift {
     }
 
     unfill(house) {
-        if(this.pressedButtons.includes(this.currentFloor)) {
+        
             let counter = 0;
+            label: while(this.pressedButtons.indexOf(this.currentFloor) != -1) {
             for (let i = 0; i < this.pressedButtons.length; i++) {
+                console.log("В unfill", this.pressedButtons);
                 if (this.currentFloor === this.pressedButtons[i]) {
                     this.pressedButtons.splice(i,1); // оследний элемент не удаляется.
                     counter++;
                     peopleNum--;
+                    continue label;
                 }
             }
-            console.log(`Вышло ${counter} человек на ${this.currentFloor} этаже`);
         }
+            console.log(`Вышло ${counter} человек на ${this.currentFloor} этаже`);
+        
     }
 }
 
@@ -125,11 +128,9 @@ display(house);
 let lift = new Lift(0);
 let i = 0;
 while(i < 18) {
-    console.log(house.allPeople);
     lift.fill(house);
     lift.moveDir(house);
     lift.unfill(house);
     display(house);
-    console.log(house.allPeople);
     i++;
 }
