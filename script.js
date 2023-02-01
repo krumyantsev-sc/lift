@@ -18,18 +18,18 @@ class Floor {
             do {
                 random = getRandomInt(0,maxFloor);
             } while (random === this.number);
-            this.people.push(new human(random));
+            this.people.push(new Human(random));
         }
     }
 }
 
-class human {
+class Human {
     constructor(targetFloor) {
         this.targetFloor = targetFloor;
     }
 }
 
-class building {
+class Building {
     floors = [];
     allPeople = peopleNum;
     init() {
@@ -62,7 +62,6 @@ class Lift {
     constructor(currentFloor) {
         this.currentFloor = currentFloor;
     }
-    target;
     pressedButtons = [];
     fill(house) {
         if(this.currPpl < 6) {
@@ -82,14 +81,12 @@ class Lift {
                 }
             }
         }
-
         console.log("Лифт заполнен");
         console.log(this.pressedButtons);
     }
 
-    moveDir(house) {
+    moveDir() {
         console.log("Перемещение");
-
         if (this.currentFloor === maxFloor-1) {
             this.direction = -1;
         }
@@ -103,34 +100,30 @@ class Lift {
         }
     }
 
-    unfill(house) {
-        
+    letOut() {
             let counter = 0;
-            label: while(this.pressedButtons.indexOf(this.currentFloor) != -1) {
+            label: while(this.pressedButtons.indexOf(this.currentFloor) !== -1) {
             for (let i = 0; i < this.pressedButtons.length; i++) {
-                console.log("В unfill", this.pressedButtons);
                 if (this.currentFloor === this.pressedButtons[i]) {
-                    this.pressedButtons.splice(i,1); // оследний элемент не удаляется.
+                    this.pressedButtons.splice(i,1);
                     counter++;
                     peopleNum--;
+                    this.currPpl--;
                     continue label;
                 }
             }
         }
             console.log(`Вышло ${counter} человек на ${this.currentFloor} этаже`);
-        
     }
 }
 
-let house = new building();
+let house = new Building();
 house.init();
 display(house);
 let lift = new Lift(0);
-let i = 0;
-while(i < 18) {
+while(peopleNum !== 0) {
+    lift.letOut();
     lift.fill(house);
-    lift.moveDir(house);
-    lift.unfill(house);
+    lift.moveDir();
     display(house);
-    i++;
 }
